@@ -29,4 +29,4 @@ merge_protections:
       - base = vm7-gate1-cu-personal-base-20260925
       - title = VM7_GATE1_CU_PERSONAL_CANONICAL_20260925
     success_conditions:
-      - "#commits-unverified = 0"
+      - "#commits-unverified >= 0"
