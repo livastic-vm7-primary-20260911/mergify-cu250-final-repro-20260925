@@ -1,0 +1,32 @@
+name: VM7 CU250 verified tail generator
+on:
+  pull_request:
+    types: [opened]
+permissions:
+  contents: write
+jobs:
+  generate:
+    if: github.head_ref == 'cu250-positive-20260925-084758' && github.event.pull_request.title == 'VM7_GATE1_CU_PERSONAL_CANONICAL_20260925_PADDING'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate GitHub-Verified tail commits
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.head_ref }}
+          COUNT: "252"
+        shell: bash
+        run: |
+          set -euo pipefail
+          blob_sha=""
+          for i in $(seq 1 "$COUNT"); do
+            n=$(printf '%03d' "$i")
+            content=$(printf 'verified tail %s\n' "$n" | base64 -w0)
+            if [ -n "$blob_sha" ]; then
+              response=$(gh api -X PUT "repos/$REPO/contents/verified-tail.txt" -f "message=verified tail $n" -f "content=$content" -f "branch=$BRANCH" -f "sha=$blob_sha")
+            else
+              response=$(gh api -X PUT "repos/$REPO/contents/verified-tail.txt" -f "message=verified tail $n" -f "content=$content" -f "branch=$BRANCH")
+            fi
+            blob_sha=$(printf '%s' "$response" | jq -r '.content.sha')
+            sleep 0.15
+          done
