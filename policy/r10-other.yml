@@ -9,4 +9,10 @@ merge_protections:
     success_conditions:
       - -mergify-configuration-changed
 
-pull_request_rules: []
+pull_request_rules:
+  - name: G2 R10 dormant policy marker
+    conditions:
+      - title = G2_R10_DORMANT_CANARY_NONMATCH_261011
+    actions:
+      comment:
+        message: G2_R10_DORMANT_CANARY
