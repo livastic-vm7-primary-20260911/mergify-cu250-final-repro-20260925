@@ -1,0 +1,13 @@
+merge_protections_settings:
+  reporting_method: check-runs
+  post_comment: false
+
+merge_protections:
+  - name: G2 R41 app-qualified failure isolation
+    if:
+      - base = g2-r41-base-261011
+      - title = G2_R41_PINNED_FAILURE_261011
+    success_conditions:
+      - "-check-failure = @github-actions/Summary"
+
+pull_request_rules: []
